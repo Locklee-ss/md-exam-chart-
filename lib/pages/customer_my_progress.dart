@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:translator/translator.dart';
 // import 'dart:math';
 
 // ignore: must_be_immutable
@@ -22,6 +23,7 @@ class CustomerMyProgress extends StatefulWidget {
 class CustomerMyExamListState extends State<CustomerMyProgress> {
   List<UserExamModel> list = [];
   List<CategoryModel> cateList = [];
+  List<String> cateTitles = [];
 
   bool isFinishLoad = false;
 
@@ -58,19 +60,26 @@ class CustomerMyExamListState extends State<CustomerMyProgress> {
         isFinishLoad = true;
       });
 
-      myCategory
-          .orderBy("creationTime", descending: true)
-          .get()
-          .then((querySnapshot) {
-        for (var result in querySnapshot.docs) {
-          setState(() {
-            cateList
-                .add(CategoryModel.fromJSON(false, result.id, result.data()));
-          });
-        }
+      await myCategory.orderBy("creationTime", descending: true).get().then(
+        (querySnapshot) async {
+          cateList.clear();
+          cateTitles.clear();
 
-        isFinishLoad = true;
-      });
+          for (var result in querySnapshot.docs) {
+            final category =
+                CategoryModel.fromJSON(false, result.id, result.data());
+            cateList.add(category);
+
+            // Translate title if needed
+            final translated =
+                await getTranslatedDetail(category.title, languageStatus);
+            cateTitles.add(translated);
+          }
+
+          isFinishLoad = true;
+          setState(() {});
+        },
+      );
 
       setState(() {});
     } on FirebaseAuthException catch (e) {
@@ -86,7 +95,7 @@ class CustomerMyExamListState extends State<CustomerMyProgress> {
 
   @override
   Widget build(BuildContext context) {
-    final isVertical = MediaQuery.of(context).size.width >= 1200;
+    // final isVertical = MediaQuery.of(context).size.width >= 1200;
 
     return Scaffold(
       appBar: ApplicationBar(
@@ -100,10 +109,9 @@ class CustomerMyExamListState extends State<CustomerMyProgress> {
                 const SizedBox(height: 16),
                 Expanded(
                   child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: isVertical
-                          ? _buildVerticalChart()
-                          : _buildHorizontalChart()),
+                      padding:
+                          const EdgeInsets.only(top: 20, left: 16, right: 1),
+                      child: _buildVerticalChart()),
                 ),
                 const SizedBox(height: 16),
                 _buildLegend(),
@@ -117,9 +125,10 @@ class CustomerMyExamListState extends State<CustomerMyProgress> {
   Widget _buildVerticalChart() {
     final ScrollController _scrollController = ScrollController();
     return Scrollbar(
-        controller: _scrollController,
-        thumbVisibility: true,
+      controller: _scrollController,
+      thumbVisibility: true,
       child: SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 30),
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
         child: SizedBox(
@@ -184,7 +193,7 @@ class CustomerMyExamListState extends State<CustomerMyProgress> {
                               child: SizedBox(
                                 width: 50,
                                 child: Text(
-                                  cateList[index].title,
+                                  cateTitles[index],
                                   textAlign: TextAlign.center,
                                   softWrap: true,
                                   maxLines: 2,
@@ -232,125 +241,125 @@ class CustomerMyExamListState extends State<CustomerMyProgress> {
     );
   }
 
-  Widget _buildHorizontalChart() {
-    final ScrollController _scrollController = ScrollController();
-    return RotatedBox(
-        quarterTurns: 1,
-        child: Scrollbar(
-        controller: _scrollController,
-        thumbVisibility: true,
-      child: SingleChildScrollView(
-        controller: _scrollController,
-        scrollDirection: Axis.horizontal,
-        child: SizedBox(
-          width: 1400,
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  maxY: 100,
-                  minY: 0,
-                  barTouchData: BarTouchData(
-                    enabled: true,
-                    touchTooltipData: BarTouchTooltipData(
-                      tooltipBgColor: Colors.grey[900],
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        String label = rodIndex == 0
-                            ? userProgressBarAgoTitle
-                            : userProgressBarNowTitle;
-                        return BarTooltipItem(
-                          '$label\n',
-                          const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          children: [
-                            TextSpan(
-                              text: '${rod.toY.toStringAsFixed(1)}%',
-                              style: const TextStyle(
-                                  color: Colors.tealAccent,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  titlesData: FlTitlesData(
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        interval: 20,
-                        reservedSize: 40,
-                        getTitlesWidget: (value, meta) => Text(
-                          '${value.toInt()}%',
-                          style: const TextStyle(
-                            color: Color.fromARGB(255, 71, 70, 70),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 48,
-                        getTitlesWidget: (value, meta) {
-                          final index = value.toInt();
-                          if (index < cateList.length) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: SizedBox(
-                                width: 50,
-                                child: Text(
-                                  cateList[index].title,
-                                  textAlign: TextAlign.center,
-                                  softWrap: true,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                  ),
-                  gridData: FlGridData(
-                    show: true,
-                    horizontalInterval: 20,
-                    drawVerticalLine: false,
-                    getDrawingHorizontalLine: (value) => FlLine(
-                      color: const Color.fromARGB(255, 51, 51, 51)
-                          .withOpacity(0.2),
-                      strokeWidth: 1,
-                    ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  barGroups: _generateBarGroups(),
-                ),
-              ),
-              Positioned.fill(
-                child: _buildBarLabels(), // overlays the percent labels
-              ),
-            ],
-          ),
-        ),
-      ),
-    ));
-  }
+  // Widget _buildHorizontalChart() {
+  //   final ScrollController _scrollController = ScrollController();
+  //   return RotatedBox(
+  //       quarterTurns: 1,
+  //       child: Scrollbar(
+  //       controller: _scrollController,
+  //       thumbVisibility: true,
+  //     child: SingleChildScrollView(
+  //       controller: _scrollController,
+  //       scrollDirection: Axis.horizontal,
+  //       child: SizedBox(
+  //         width: 1400,
+  //         child: Stack(
+  //           alignment: Alignment.topCenter,
+  //           children: [
+  //             BarChart(
+  //               BarChartData(
+  //                 alignment: BarChartAlignment.spaceAround,
+  //                 maxY: 100,
+  //                 minY: 0,
+  //                 barTouchData: BarTouchData(
+  //                   enabled: true,
+  //                   touchTooltipData: BarTouchTooltipData(
+  //                     tooltipBgColor: Colors.grey[900],
+  //                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
+  //                       String label = rodIndex == 0
+  //                           ? userProgressBarAgoTitle
+  //                           : userProgressBarNowTitle;
+  //                       return BarTooltipItem(
+  //                         '$label\n',
+  //                         const TextStyle(
+  //                             color: Colors.white, fontWeight: FontWeight.bold),
+  //                         children: [
+  //                           TextSpan(
+  //                             text: '${rod.toY.toStringAsFixed(1)}%',
+  //                             style: const TextStyle(
+  //                                 color: Colors.tealAccent,
+  //                                 fontWeight: FontWeight.w500),
+  //                           ),
+  //                         ],
+  //                       );
+  //                     },
+  //                   ),
+  //                 ),
+  //                 titlesData: FlTitlesData(
+  //                   leftTitles: AxisTitles(
+  //                     sideTitles: SideTitles(
+  //                       showTitles: true,
+  //                       interval: 20,
+  //                       reservedSize: 40,
+  //                       getTitlesWidget: (value, meta) => Text(
+  //                         '${value.toInt()}%',
+  //                         style: const TextStyle(
+  //                           color: Color.fromARGB(255, 71, 70, 70),
+  //                           fontWeight: FontWeight.w500,
+  //                           fontSize: 12,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   bottomTitles: AxisTitles(
+  //                     sideTitles: SideTitles(
+  //                       showTitles: true,
+  //                       reservedSize: 48,
+  //                       getTitlesWidget: (value, meta) {
+  //                         final index = value.toInt();
+  //                         if (index < cateList.length) {
+  //                           return Padding(
+  //                             padding: const EdgeInsets.only(top: 8.0),
+  //                             child: SizedBox(
+  //                               width: 50,
+  //                               child: Text(
+  //                                 cateList[index].title,
+  //                                 textAlign: TextAlign.center,
+  //                                 softWrap: true,
+  //                                 maxLines: 2,
+  //                                 overflow: TextOverflow.ellipsis,
+  //                                 style: const TextStyle(
+  //                                   fontSize: 10,
+  //                                   fontWeight: FontWeight.w600,
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           );
+  //                         }
+  //                         return const SizedBox.shrink();
+  //                       },
+  //                     ),
+  //                   ),
+  //                   rightTitles: const AxisTitles(
+  //                     sideTitles: SideTitles(showTitles: false),
+  //                   ),
+  //                   topTitles: const AxisTitles(
+  //                     sideTitles: SideTitles(showTitles: false),
+  //                   ),
+  //                 ),
+  //                 gridData: FlGridData(
+  //                   show: true,
+  //                   horizontalInterval: 20,
+  //                   drawVerticalLine: false,
+  //                   getDrawingHorizontalLine: (value) => FlLine(
+  //                     color: const Color.fromARGB(255, 51, 51, 51)
+  //                         .withOpacity(0.2),
+  //                     strokeWidth: 1,
+  //                   ),
+  //                 ),
+  //                 borderData: FlBorderData(show: false),
+  //                 barGroups: _generateBarGroups(),
+  //               ),
+  //             ),
+  //             Positioned.fill(
+  //               child: _buildBarLabels(), // overlays the percent labels
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   ));
+  // }
 
   List<BarChartGroupData> _generateBarGroups() {
     final now = DateTime.now();
@@ -525,5 +534,12 @@ class CustomerMyExamListState extends State<CustomerMyProgress> {
         );
       },
     );
+  }
+
+  Future<String> getTranslatedDetail(String text, int languageStatus) async {
+    final translator = GoogleTranslator();
+    return languageStatus == 0
+        ? text
+        : await translator.translate(text, to: "en").then((t) => t.text);
   }
 }
