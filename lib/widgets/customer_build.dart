@@ -796,7 +796,8 @@ Future<Widget> membershipOneItem(HomePageState homePageState, BuildContext conte
                 memberships: homePageState.membershipLists),
           ),
         );
-      });
+      },
+      isRecommended: index == (list.length-1));
 }
 
 void validMembershipQuestion(
