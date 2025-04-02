@@ -263,8 +263,27 @@ class _UserSimpleAddState extends State<UserSimpleAdd> {
                                                   widget.homePageState
                                                       .setLoginUsername(username);
 
+                                                  // print(username);
 
-                                                  Navigator.pop(context);
+                                                  // if (Navigator.canPop(context)) {
+                                                  //   Navigator.of(context).pop();
+                                                  //   // Navigator.of(context).pop();
+                                                  //   widget.homePageState.refresh();
+                                                  // }
+                                                  // Navigator.pop(context);
+                                                  // if (Navigator.canPop(context)) {
+                                                  //   if (widget.isOriginSelectAdd) {
+                                                  //     Navigator.pop(context);
+                                                  //   }
+                                                  // }
+
+                                                  // Navigator.pop(context);
+
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => HomePage(idProfiler: IdProfiler.general)),
+                                                  );
+
 
                                                   widget.homePageState.refresh();
                                                 } else {
@@ -278,6 +297,8 @@ class _UserSimpleAddState extends State<UserSimpleAdd> {
                                                 }
                                               });
                                             }
+
+                                            
                                           } else {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
@@ -311,6 +332,9 @@ class _UserSimpleAddState extends State<UserSimpleAdd> {
       ),
     );
   }
+
+
+
 
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
