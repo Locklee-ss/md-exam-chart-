@@ -14,37 +14,32 @@ Widget membershipBuild(
   bool buttonShowSelectNew,
   VoidCallback onClickSelectNew, {
   bool isRecommended = false,
+  bool x2 = false
 }) {
   if (body.length < 10) {
     body = "";
   }
 
-  String kConsumableId = "";
+  // String kConsumableId = "";
 
-  if (homePageState.iosPurchaseMembership) {
-    kConsumableId = "1M";
-    price = 9.99;
+  // if (homePageState.iosPurchaseMembership) {
+  //   kConsumableId = "1M";
+  //   price = 9.99;
 
-    if (title == "1 MES") {
-      kConsumableId = "1M";
-      price = 9.99;
-    } else if (title == "3 MESES") {
-      kConsumableId = "3M";
-      price = 19.99;
-    } else if (title == "6 MESES") {
-      kConsumableId = "6M";
-      price = 39.99;
-    } else if (title == "1 AÑO") {
-      kConsumableId = "1A";
-      price = 69.99;
-    }
-  }
-
-  if (title == "1 AÑO") {
-      kConsumableId = "1A";
-      price = 69.99;
-  }
-
+  //   if (title == "1 MES") {
+  //     kConsumableId = "1M";
+  //     price = 9.99;
+  //   } else if (title == "3 MESES") {
+  //     kConsumableId = "3M";
+  //     price = 19.99;
+  //   } else if (title == "6 MESES") {
+  //     kConsumableId = "6M";
+  //     price = 39.99;
+  //   } else if (title == "1 AÑO") {
+  //     kConsumableId = "1A";
+  //     price = 69.99;
+  //   }
+  // }
   return Stack(
     clipBehavior: Clip.none,
     children: [
@@ -129,15 +124,29 @@ Widget membershipBuild(
           ),
         ),
       ),
-      if (isRecommended)
+      if (isRecommended && !x2)
         Positioned(
           top: 130,
           right: 26,
-          child: Image.asset(
-            'assets/badge.png',
-            width: 200,
-            height: 169,
-          ),
+          child: Opacity(opacity: 0.5,
+            child: Image.asset(
+              'assets/badge.png',
+              width: 200,
+              height: 169,
+            )
+          ) 
+        ),
+      if (isRecommended && x2)
+        Positioned(
+          top: 105,
+          right: 15,
+          child: Opacity(opacity: 0.5,
+            child: Image.asset(
+              'assets/badge.png',
+              width: 150,
+              height: 126,
+            )
+          ) 
         ),
     ],
   );
