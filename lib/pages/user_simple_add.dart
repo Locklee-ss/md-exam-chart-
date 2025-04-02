@@ -5,10 +5,13 @@ import 'package:mdexam/models/user_model.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:mdexam/pages/home.dart';
 import 'package:mdexam/utils/firebase/firebase_custom_user.dart';
+import 'package:mdexam/utils/firebase/firebase_auth.dart';
 import 'package:mdexam/utils/general/reference_Page_State.dart';
 import 'package:mdexam/variables/globalvar.dart';
 import 'package:mdexam/widgets/application_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class UserSimpleAdd extends StatefulWidget {
@@ -16,6 +19,7 @@ class UserSimpleAdd extends StatefulWidget {
   ReferencePageState referencePageState;
   final bool isNew;
   bool isModify;
+  bool dobleClosed = false;
   UserModel userModel;
   bool isOriginSelectAdd;
   List<MembershipModel> memberships;
@@ -238,14 +242,41 @@ class _UserSimpleAddState extends State<UserSimpleAdd> {
                                               ),
                                             ));
 
-                                            if (Navigator.canPop(context)) {
-                                              Navigator.of(context).pop();
-                                            }
-                                            //    Se ve que lo de arriba funciona diferente  Navigator.pop(context);
-                                            if (Navigator.canPop(context)) {
-                                              if (widget.isOriginSelectAdd) {
-                                                Navigator.pop(context);
-                                              }
+                                            if (_formKey.currentState!.validate()) {
+                                              FirebaseAuthenticationHelper()
+                                                  .signIn(
+                                                      email: _newUsernameController.text,
+                                                      password: _newPasswordController.text)
+                                                  .then((result) async {
+                                                if (result == null) {
+                                                  final FirebaseAuth auth =
+                                                      FirebaseAuth.instance;
+                                                  String? username = auth.currentUser?.email;
+
+                                                  SharedPreferences prefs =
+                                                      await SharedPreferences.getInstance();
+                                                  prefs.setBool(preferenceIsLogin, true);
+                                                  prefs.setString(
+                                                      preferenceLoginUsername, username!);
+
+                                                  widget.homePageState.setIsLogin(true);
+                                                  widget.homePageState
+                                                      .setLoginUsername(username);
+
+
+                                                  Navigator.pop(context);
+
+                                                  widget.homePageState.refresh();
+                                                } else {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                      result,
+                                                      style: const TextStyle(fontSize: 16),
+                                                    ),
+                                                  ));
+                                                }
+                                              });
                                             }
                                           } else {
                                             ScaffoldMessenger.of(context)
