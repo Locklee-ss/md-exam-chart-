@@ -460,7 +460,7 @@ Widget membershipBuildListViewX2(
           index1 < list.length
               ? FutureBuilder<Widget>(
                   future: membershipOneItem(
-                      homePageState, context, list, index1, factor, true),
+                      homePageState, context, list, index1, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -487,7 +487,7 @@ Widget membershipBuildListViewX2(
           index2 < list.length
               ? FutureBuilder<Widget>(
                   future: membershipOneItem(
-                      homePageState, context, list, index2, factor, true),
+                      homePageState, context, list, index2, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -541,7 +541,7 @@ Widget membershipBuildListViewX3(
           index1 < list.length
               ? FutureBuilder<Widget>(
                   future: membershipOneItem(
-                      homePageState, context, list, index1, factor, false),
+                      homePageState, context, list, index1, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -567,7 +567,7 @@ Widget membershipBuildListViewX3(
           index2 < list.length
               ? FutureBuilder<Widget>(
                   future: membershipOneItem(
-                      homePageState, context, list, index2, factor, false),
+                      homePageState, context, list, index2, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -593,7 +593,7 @@ Widget membershipBuildListViewX3(
           index3 < list.length
               ? FutureBuilder<Widget>(
                   future: membershipOneItem(
-                      homePageState, context, list, index3, factor, false),
+                      homePageState, context, list, index3, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -646,7 +646,7 @@ Widget membershipBuildListViewX4(
         children: [
           index1 < list.length
               ? FutureBuilder<Widget>(
-                  future: membershipOneItem(homePageState, context, list, index1, factor, false),
+                  future: membershipOneItem(homePageState, context, list, index1, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Padding(
@@ -668,7 +668,7 @@ Widget membershipBuildListViewX4(
 
           index2 < list.length
               ? FutureBuilder<Widget>(
-                  future: membershipOneItem(homePageState, context, list, index2, factor, false),
+                  future: membershipOneItem(homePageState, context, list, index2, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Padding(
@@ -690,7 +690,7 @@ Widget membershipBuildListViewX4(
 
           index3 < list.length
               ? FutureBuilder<Widget>(
-                  future: membershipOneItem(homePageState, context, list, index3, factor, false),
+                  future: membershipOneItem(homePageState, context, list, index3, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Padding(
@@ -712,7 +712,7 @@ Widget membershipBuildListViewX4(
 
           index4 < list.length
               ? FutureBuilder<Widget>(
-                  future: membershipOneItem(homePageState, context, list, index4, factor, false),
+                  future: membershipOneItem(homePageState, context, list, index4, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Padding(
@@ -747,11 +747,10 @@ Future<String> getTranslatedDetail(String text, int languageStatus) async {
 }
 
 Future<Widget> membershipOneItem(HomePageState homePageState, BuildContext context,
-    List<MembershipModel> list, int index, double factor, bool isphone) async {
+    List<MembershipModel> list, int index, double factor) async {
   final MembershipModel membershipModel = list[index];
   String title = await getTranslatedDetail(membershipModel.title, languageStatus);
   String detail = await getTranslatedDetail(membershipModel.detail, languageStatus);
-  bool isPhone = isphone;
   return membershipBuild(
       homePageState,
       title,
@@ -797,9 +796,7 @@ Future<Widget> membershipOneItem(HomePageState homePageState, BuildContext conte
                 memberships: homePageState.membershipLists),
           ),
         );
-      },
-      isRecommended: index == (list.length-1),
-      x2: isPhone);
+      });
 }
 
 void validMembershipQuestion(

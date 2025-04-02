@@ -10,7 +10,7 @@ Widget CustomButton(String caption, IconData icon, bool withIcon,
       child: Padding(
           padding: const EdgeInsets.all(5),
           child: ClipRRect(
-              borderRadius: BorderRadius.circular(40),
+              borderRadius: BorderRadius.circular(5),
               child: Container(
                   color: backColor,
                   padding: const EdgeInsets.all(10),
