@@ -22,7 +22,7 @@ import 'package:mdexam/utils/general/sizes_helpers.dart';
 import 'package:mdexam/utils/list_transforms/parameter_list_transforms.dart';
 import 'package:mdexam/variables/globalvar.dart';
 import 'package:flutter/material.dart';
-import 'package:mdexam/widgets/membership_build.dart';
+import 'package:mdexam/widgets/membership_build_clone.dart';
 import 'package:mdexam/widgets/menu.dart';
 import 'package:mdexam/widgets/option_build.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
@@ -125,8 +125,6 @@ Widget customerBuild(
         const SizedBox(
           height: 20,
         ),
-
-
 
 /* Image */
         const SizedBox(
@@ -438,11 +436,8 @@ Widget customerBuild(
       ]));
 }
 
-Widget membershipBuildListViewX2(
-    HomePageState homePageState,
-    BuildContext context,
-    List<MembershipModel> list,
-    double factor) {
+Widget membershipBuildListViewX2(HomePageState homePageState,
+    BuildContext context, List<MembershipModel> list, double factor) {
   return ListView.builder(
     shrinkWrap: true,
     physics: const NeverScrollableScrollPhysics(),
@@ -483,7 +478,6 @@ Widget membershipBuildListViewX2(
                   },
                 )
               : Container(),
-
           index2 < list.length
               ? FutureBuilder<Widget>(
                   future: membershipOneItem(
@@ -516,13 +510,8 @@ Widget membershipBuildListViewX2(
   );
 }
 
-
-
-Widget membershipBuildListViewX3(
-    HomePageState homePageState,
-    BuildContext context,
-    List<MembershipModel> list,
-    double factor) {
+Widget membershipBuildListViewX3(HomePageState homePageState,
+    BuildContext context, List<MembershipModel> list, double factor) {
   return ListView.builder(
     shrinkWrap: true,
     physics: const NeverScrollableScrollPhysics(),
@@ -549,7 +538,8 @@ Widget membershipBuildListViewX3(
                         child: const SizedBox(
                           width: 80,
                           height: 80,
-                          child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2)),
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -563,7 +553,6 @@ Widget membershipBuildListViewX3(
                   },
                 )
               : Container(),
-
           index2 < list.length
               ? FutureBuilder<Widget>(
                   future: membershipOneItem(
@@ -575,7 +564,8 @@ Widget membershipBuildListViewX3(
                         child: const SizedBox(
                           width: 80,
                           height: 80,
-                          child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2)),
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -589,7 +579,6 @@ Widget membershipBuildListViewX3(
                   },
                 )
               : Container(),
-
           index3 < list.length
               ? FutureBuilder<Widget>(
                   future: membershipOneItem(
@@ -601,7 +590,8 @@ Widget membershipBuildListViewX3(
                         child: const SizedBox(
                           width: 80,
                           height: 80,
-                          child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2)),
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -621,13 +611,8 @@ Widget membershipBuildListViewX3(
   );
 }
 
-
-
-Widget membershipBuildListViewX4(
-    HomePageState homePageState,
-    BuildContext context,
-    List<MembershipModel> list,
-    double factor) {
+Widget membershipBuildListViewX4(HomePageState homePageState,
+    BuildContext context, List<MembershipModel> list, double factor) {
   return ListView.builder(
     shrinkWrap: true,
     physics: const NeverScrollableScrollPhysics(),
@@ -646,7 +631,8 @@ Widget membershipBuildListViewX4(
         children: [
           index1 < list.length
               ? FutureBuilder<Widget>(
-                  future: membershipOneItem(homePageState, context, list, index1, factor),
+                  future: membershipOneItem(
+                      homePageState, context, list, index1, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Padding(
@@ -654,7 +640,8 @@ Widget membershipBuildListViewX4(
                         child: SizedBox(
                           width: 80,
                           height: 80,
-                          child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2)),
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -665,10 +652,10 @@ Widget membershipBuildListViewX4(
                   },
                 )
               : Container(),
-
           index2 < list.length
               ? FutureBuilder<Widget>(
-                  future: membershipOneItem(homePageState, context, list, index2, factor),
+                  future: membershipOneItem(
+                      homePageState, context, list, index2, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Padding(
@@ -676,7 +663,8 @@ Widget membershipBuildListViewX4(
                         child: SizedBox(
                           width: 80,
                           height: 80,
-                          child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2)),
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -687,10 +675,10 @@ Widget membershipBuildListViewX4(
                   },
                 )
               : Container(),
-
           index3 < list.length
               ? FutureBuilder<Widget>(
-                  future: membershipOneItem(homePageState, context, list, index3, factor),
+                  future: membershipOneItem(
+                      homePageState, context, list, index3, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Padding(
@@ -698,7 +686,8 @@ Widget membershipBuildListViewX4(
                         child: SizedBox(
                           width: 80,
                           height: 80,
-                          child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2)),
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -709,10 +698,10 @@ Widget membershipBuildListViewX4(
                   },
                 )
               : Container(),
-
           index4 < list.length
               ? FutureBuilder<Widget>(
-                  future: membershipOneItem(homePageState, context, list, index4, factor),
+                  future: membershipOneItem(
+                      homePageState, context, list, index4, factor),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Padding(
@@ -720,7 +709,8 @@ Widget membershipBuildListViewX4(
                         child: SizedBox(
                           width: 80,
                           height: 80,
-                          child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2)),
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -737,27 +727,31 @@ Widget membershipBuildListViewX4(
   );
 }
 
-
-
 Future<String> getTranslatedDetail(String text, int languageStatus) async {
-    final translator = GoogleTranslator();
-    return languageStatus == 0
-        ? text
-        : await translator.translate(text, to: "en").then((t) => t.text);
+  final translator = GoogleTranslator();
+  return languageStatus == 0
+      ? text
+      : await translator.translate(text, to: "en").then((t) => t.text);
 }
 
-Future<Widget> membershipOneItem(HomePageState homePageState, BuildContext context,
-    List<MembershipModel> list, int index, double factor) async {
+Future<Widget> membershipOneItem(
+    HomePageState homePageState,
+    BuildContext context,
+    List<MembershipModel> list,
+    int index,
+    double factor) async {
   final MembershipModel membershipModel = list[index];
-  String title = await getTranslatedDetail(membershipModel.title, languageStatus);
-  String detail = await getTranslatedDetail(membershipModel.detail, languageStatus);
+  String title =
+      await getTranslatedDetail(membershipModel.title, languageStatus);
+  String detail =
+      await getTranslatedDetail(membershipModel.detail, languageStatus);
   return membershipBuild(
       homePageState,
       title,
       membershipModel.price,
       detail,
       !membershipModel.isDefault
-          ? membershipSelectTitle
+          ? (index == (list.length-1))?membershipSelectYearTitle:membershipSelectTitle
           : membershipSelectNewTitle,
       !membershipModel.isDefault,
       factor,
@@ -796,7 +790,10 @@ Future<Widget> membershipOneItem(HomePageState homePageState, BuildContext conte
                 memberships: homePageState.membershipLists),
           ),
         );
-      });
+      },
+      index==0,
+      index==(list.length-1)
+      );
 }
 
 void validMembershipQuestion(

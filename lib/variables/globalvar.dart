@@ -2075,7 +2075,8 @@ String get membershipSaving => languageStatus == 0 ? "Guardando membresia" : "Sa
 String get membershipDeleting => languageStatus == 0 ? "Borrando membresia" : "Deleting membership";
 
 String get membershipSelectTitle => languageStatus == 0 ? "Seleccionar" : "Select";
-String get membershipSelectNewTitle => languageStatus == 0 ? "Crear cuenta" : "Create Account";
+String get membershipSelectNewTitle => languageStatus == 0 ? "CREAR CUENTA" : "CREATE ACCOUNT";
+String get membershipSelectYearTitle => languageStatus == 0 ? "RECOMANDADO" : "RECOMMENDED";
 
 String get categoryABMFieldTitleHint => languageStatus == 0 ? "¿Titulo de la categoría?" : "Category title?";
 String get categoryABMFieldTitleLabel => languageStatus == 0 ? "Título" : "Title";
